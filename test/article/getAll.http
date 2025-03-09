@@ -1,0 +1,4 @@
+GET http://localhost:3000/api/article
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwiaWF0IjoxNzQxNTA3NTA4LCJleHAiOjE3NDE1MTExMDh9.m9v5I8gPULinLNTM4Durmi2lLQ8vnnnn9U_dGZ8WQJc
+

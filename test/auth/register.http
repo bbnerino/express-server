@@ -1,8 +1,8 @@
-POST http://localhost:3000/api/auth/register
+POST http://localhost:5050/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "test1",
+    "username": "bbnerino",
     "password": "qwer1234"
 }
 

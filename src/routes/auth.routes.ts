@@ -4,54 +4,58 @@ import { generateToken } from "../utils/jwt";
 
 const router = Router();
 
-router.post("/register", async (req: Request, res: any) => {
+router.post("/register", async (req: Request, response: any) => {
   const { username, password } = req.body;
-
   if (!username || !password) {
-    return res
+    return response
       .status(400)
       .json({ message: "Username and password are required" });
   }
 
   try {
-    const user = await AuthController.register(username, password);
-    res.status(201).json({
-      message: "User registered successfully",
-      user: { id: user.id, username: user.username },
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-router.post("/login", async (req: Request, res: any) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ message: "Username and password are required" });
-  }
-
-  try {
-    const user = await AuthController.login(username, password);
-    if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+    const res = await AuthController.register(username, password);
+    if (res.error) {
+      return response.status(400).json({ message: res.error });
     }
 
-    const token = generateToken(user);
-    res.json({ message: "Login successful", token });
+    response.status(201).json({
+      message: "User registered successfully",
+      user: res,
+    });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    response.status(500).json({ message: "Server error" });
   }
 });
-router.get("/users", async (req: Request, res: any) => {
+
+router.post("/login", async (req: Request, response: any) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return response
+      .status(400)
+      .json({ message: "Username and password are required" });
+  }
+
+  try {
+    const res = await AuthController.login(username, password);
+
+    if (res?.error) {
+      return response.status(400).json({ message: res.error });
+    }
+
+    const token = generateToken(res._id);
+    response.json({ message: "Login successful", token });
+  } catch (err) {
+    response.status(500).json({ message: "Server error" });
+  }
+});
+router.get("/users", async (req: Request, response: any) => {
   try {
     const users = await AuthController.getUsers();
 
-    res.json({ message: "Users fetched successfully", users });
+    response.json({ users });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    response.status(500).json({ message: "Server error" });
   }
 });
 

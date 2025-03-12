@@ -7,64 +7,81 @@ const router = Router();
 
 // GET /api/article/{id}
 
-router.get("/:id", async (req: Request, res: any) => {
-  const article = await ArticleController.getById(req.params.id);
+router.get("/:id", async (req: Request, response: any) => {
+  const res = await ArticleController.getById(req.params.id);
 
-  if (!article) {
-    return res.status(404).json({ message: "Article not found" });
+  if (res.error) {
+    return response.status(404).json({ message: res.error });
   }
+  console.log("asdfjkljs", res);
 
-  res.json({ message: "Article fetched successfully", article });
+  response.json({ article: res });
 });
 
 // GET /api/article
 
-router.get("/", async (req: Request, res: any) => {
-  const articles = await ArticleController.getArticles();
+router.get("/", async (req: Request, response: any) => {
+  const res = await ArticleController.getArticles();
+  if (res.error) {
+    return response.status(404).json({ message: res.error });
+  }
 
-  res.json({ message: "Articles fetched successfully", articles });
+  response.json({ message: "Articles fetched successfully", articles: res });
 });
 
 // POST /api/article
 
-router.post("/", async (req: AuthRequest, res: any) => {
+router.post("/", authenticateJWT, async (req: AuthRequest, response: any) => {
   const { title, content } = req.body;
 
   if (!title || !content) {
-    return res.status(400).json({ message: "Title and content are required" });
+    return response
+      .status(400)
+      .json({ message: "Title and content are required" });
   }
 
-  const article = await ArticleController.create(title, content, req.userId);
+  const res = await ArticleController.create(title, content, req.userId);
+  if (res.error) {
+    return response.status(400).json({ message: res.error });
+  }
 
-  res.status(201).json({ message: "Article created successfully", article });
+  response.status(201).json({ article: res });
 });
 
 // PUT /api/article/{id} - 인증 필요
-router.patch("/:id", authenticateJWT, async (req: AuthRequest, res: any) => {
-  const { title, content } = req.body;
-  const article = await ArticleController.update(
-    req.params.id,
-    title,
-    content,
-    req.userId
-  );
+router.patch(
+  "/:id",
+  authenticateJWT,
+  async (req: AuthRequest, response: any) => {
+    const { title, content } = req.body;
+    const res = await ArticleController.update(
+      req.params.id,
+      title,
+      content,
+      req.userId
+    );
 
-  if (!article) {
-    return res.status(404).json({ message: "Article not found" });
+    if (res.error) {
+      return response.status(404).json({ message: res.error });
+    }
+
+    response.json({ message: "Article updated successfully", article: res });
   }
-
-  res.json({ message: "Article updated successfully", article });
-});
+);
 
 // DELETE /api/article/{id} - 인증 필요
-router.delete("/:id", authenticateJWT, async (req: AuthRequest, res: any) => {
-  const article = await ArticleController.remove(req.params.id, req.userId);
+router.delete(
+  "/:id",
+  authenticateJWT,
+  async (req: AuthRequest, response: any) => {
+    const res = await ArticleController.remove(req.params.id, req.userId);
 
-  if (!article) {
-    return res.status(404).json({ message: "Article not found" });
+    if (res.error) {
+      return response.status(404).json({ message: res.error });
+    }
+
+    response.json({ message: "Article deleted successfully" });
   }
-
-  res.json({ message: "Article deleted successfully", article });
-});
+);
 
 export default router;

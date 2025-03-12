@@ -1,22 +1,10 @@
-interface Article {
-  id: string;
-  title: string;
-  content: string;
-  userId: string;
-}
-
-const articles: Article[] = []; // 간단한 메모리 내 저장소 (DB는 나중에 연결)
+import mongoose from "mongoose";
+import { ArticleModel } from "../models/articles";
 
 const create = async (title: string, content: string, userId: string) => {
-  const article = {
-    id: `${articles.length + 1}`,
-    title,
-    content,
-    userId,
-  } as Article;
-  articles.push(article);
-
-  return article;
+  const article = new ArticleModel({ title, content, userId });
+  const _article = await article.save();
+  return _article as any;
 };
 
 const update = async (
@@ -25,38 +13,64 @@ const update = async (
   content: string,
   userId: string
 ) => {
-  const article = articles.find((article) => article.id === id);
-  if (!article) return null;
+  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  if (!isValidId) {
+    return { error: "Invalid article ID" };
+  }
+  const article = await ArticleModel.findById(id);
+
+  if (!article) {
+    return { error: "Article not found" };
+  }
 
   if (article.userId !== userId) {
-    return null; // 사용자가 작성한 글만 수정 가능
+    return { error: "You are not authorized to update this article" };
   }
 
   article.title = title;
   article.content = content;
+  const _article = await article.save();
 
-  return article;
+  return _article as any;
 };
 
 const remove = async (id: string, userId: string) => {
-  const index = articles.findIndex((article) => article.id === id);
-  if (index === -1) return null;
+  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  if (!isValidId) {
+    return { error: "Invalid article ID" };
+  }
+  const article = await ArticleModel.findById(id);
 
-  const article = articles[index];
-  if (article.userId !== userId) {
-    return null; // 사용자가 작성한 글만 삭제 가능
+  if (!article) {
+    return { error: "Article not found" };
   }
 
-  articles.splice(index, 1);
+  if (article.userId !== userId) {
+    return { error: "You are not authorized to delete this article" };
+  }
 
-  return id;
+  const _article = await article.deleteOne();
+  return _article as any;
 };
 
 const getArticles = async () => {
-  return articles;
+  const articles = await ArticleModel.find();
+  return articles as any;
 };
+
 const getById = async (id: string) => {
-  return articles.find((article) => article.id === id);
+  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  if (!isValidId) {
+    return { error: "Invalid article ID" };
+  }
+  const article = await ArticleModel.findById(id);
+  return article as any;
+};
+
+const getArticlesByUserId = async (userId: string) => {
+  const articles = await ArticleModel.find({ userId });
+
+  return articles as any;
 };
 
 export const ArticleController = {
@@ -65,4 +79,5 @@ export const ArticleController = {
   update,
   remove,
   getById,
+  getArticlesByUserId,
 };

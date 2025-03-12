@@ -1,9 +1,9 @@
-POST http://localhost:5050/api/article
+PATCH  http://localhost:5050/api/article/67d196eb069afd976fcf0f0d
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2QxODcxZjFhNmRkMWNkMTVjNzNiNDUiLCJpYXQiOjE3NDE3ODg2ODQsImV4cCI6MTc0MTc5MjI4NH0.nLwKOOCQHgIGj6srtvO5sUQRifdZ3XFyFYYko82Jv48
 
 
 {
-    "title": "###3###########3",
-    "content": "헬2로웅3"
+    "title": "유저1의 게시글2",
+    "content": "게시글 내용 너무너무 반가워요!2"
 }

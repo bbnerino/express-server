@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ArticleModel } from "../models/articles";
+import { ArticleModel } from "../models/article.model";
 
 const create = async (title: string, content: string, userId: string) => {
   const article = new ArticleModel({ title, content, userId });

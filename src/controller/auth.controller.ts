@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { UserModel } from "../models/user";
+import { UserModel } from "../models/user.model";
 
 const register = async (username: string, password: string) => {
   if (password.length < 8) {

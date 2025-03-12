@@ -1,4 +1,4 @@
-import { AuthController } from "../controller/auth";
+import { AuthController } from "../controller/auth.controller";
 import { Request, Router } from "express";
 import { generateToken } from "../utils/jwt";
 

@@ -1,5 +1,5 @@
 import { Request, Router } from "express";
-import { ArticleController } from "../controller/article";
+import { ArticleController } from "../controller/article.controller";
 import { authenticateJWT } from "../middlewares/auth.middleware";
 import { AuthRequest } from "../utils/api";
 

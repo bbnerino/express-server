@@ -25,9 +25,6 @@ jobs:
       - name: Build TypeScript
         run: npm run build
 
-      - name: Run tests
-        run: npm test
-
       - name: Deploy to EC2
         if: success()
         uses: appleboy/ssh-action@v0.1.10

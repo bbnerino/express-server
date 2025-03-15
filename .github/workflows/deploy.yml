@@ -3,7 +3,7 @@ name: Deploy Express App
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/express-app
-            git pull origin main
+            git pull origin master
             npm install
             npm run build
             pm2 restart all

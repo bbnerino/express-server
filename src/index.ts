@@ -15,7 +15,7 @@ mongoose
   });
 
 const app = express();
-const PORT = process.env.PORT || 8888;
+const PORT = process.env.PORT || 5050;
 
 app.use(express.json());
 

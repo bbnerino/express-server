@@ -37,4 +37,4 @@ jobs:
             git pull origin master
             npm install
             npm run build
-            pm2 restart all
+            pm2 reload all

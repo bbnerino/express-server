@@ -33,7 +33,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/${{ secrets.EC2_USER }}/express-app
+            ls -al
+            cd /home/ec2-user/express-app
             git pull origin master
             npm install
             npm run build
